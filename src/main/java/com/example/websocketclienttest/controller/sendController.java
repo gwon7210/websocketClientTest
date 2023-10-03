@@ -1,5 +1,6 @@
 package com.example.websocketclienttest.controller;
 
+import com.example.websocketclienttest.model.ChatDTO;
 import com.example.websocketclienttest.model.ChatMessage;
 import com.example.websocketclienttest.handler.MyStompSessionHandler;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.web.socket.sockjs.client.SockJsClient;
 import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,13 +34,12 @@ public class sendController {
     @GetMapping("/send")
     public void send() {
 
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setContent("hello word");
-        chatMessage.setType(ChatMessage.MessageType.CHAT);
-        chatMessage.setSender("박지원");
-
+        ChatDTO chat = new ChatDTO();
+        chat.setChatRoomId(1L);
+        chat.setSender("박지원");
+        chat.setContent("스프링 클라이언트로 부터 온 메시지 입니다.");
         if (stompSession!= null && stompSession.isConnected()) {
-            stompSession.send("/app/chat.sendMessage", chatMessage);
+            stompSession.send("/pub/chat.message.1", chat);
         } else {
 
             // 연결이 없는 경우 처리할 로직을 추가합니다.
@@ -56,8 +57,8 @@ public class sendController {
                 stompClient.setMessageConverter(new MappingJackson2MessageConverter());
 
                 //Connect
-                stompSession = stompClient.connect("ws://localhost:8080/ws", sessionHandler).get();
-                stompSession.send("/app/chat.sendMessage", chatMessage);
+                stompSession = stompClient.connect("ws://localhost:8080/ws_keywert", sessionHandler).get();
+                stompSession.send("/pub/chat.message.1", chat);
             }catch (Exception e){
                 log.error("웹 소켓 서버와의 연결에 실패하여습니다. " + e.getMessage() );
             }

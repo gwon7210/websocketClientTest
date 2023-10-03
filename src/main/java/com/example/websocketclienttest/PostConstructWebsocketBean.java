@@ -38,7 +38,7 @@ public class PostConstructWebsocketBean {
              stompClient.setMessageConverter(new MappingJackson2MessageConverter());
 
              //Connect
-             stompSession = stompClient.connect("ws://localhost:8080/ws", sessionHandler).get();
+             stompSession = stompClient.connect("ws://localhost:8080/ws_keywert", sessionHandler).get();
              System.out.println(stompClient);
          }catch (Exception e){
              log.error("웹 소켓 서버와의 연결에 실패하여습니다. " + e.getMessage() );
